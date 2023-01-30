@@ -16,6 +16,18 @@
  ******************************************************************************
  */
 
+/* ******************************************************************************
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *******************************************************************************/
+
 #include <stdint.h>
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
@@ -25,7 +37,18 @@
 #include "stm32f446re.h"
 #include "stm32f446re_gpio_drivers.h"
 
-long int temp;
+//Set all rows to HIGH
+void SetRows(){
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO8, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO9, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO10, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO11, GPIO_PIN_SET);
+}
+
+void delay(){
+	for(int i=0;i<300000;i++);
+}
+
 int main(void)
 {
 
@@ -77,84 +100,101 @@ int main(void)
 	gpiox.GPIO_PinConfig.PinPUPDCtrl = GPIO_NO_PUPD;
 	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO5;
 
+	GPIO_Init(&gpiox);
 
 
 
-//	while(1){
-//		//Set Row data output to LOW (Output data register)
-//		*pPortA_OutputData &= (0x0 << 8);
-//		//Set R1 to high
-//		*pPortA_OutputData |= (1 << 8);
-//
-//		if(*pPortA_InputData & (1 << 0)){ //C1
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 1)){ //C2
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 6)){ //C3
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//			}
-//		else if(*pPortA_InputData & (1 << 7)){ //C4
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//
-//		//Set Row data output to LOW (Output data register)
-//		*pPortA_OutputData &= (0x0 << 8);
-//		//Set R2 to high
-//		*pPortA_OutputData |= (1 << 9);
-//
-//		if(*pPortA_InputData & (1 << 0)){ //C1
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 1)){ //C2
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 6)){ //C3
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//			}
-//		else if(*pPortA_InputData & (1 << 7)){ //C4
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//
-//		//Set Row data output to LOW (Output data register)
-//		*pPortA_OutputData &= (0x0 << 8);
-//		//Set R3 to high
-//		*pPortA_OutputData |= (1 << 10);
-//
-//		if(*pPortA_InputData & (1 << 0)){ //C1
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 1)){ //C2
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 6)){ //C3
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//			}
-//		else if(*pPortA_InputData & (1 << 7)){ //C4
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//
-//		//Set Row data output to LOW (Output data register)
-//		*pPortA_OutputData &= (0x0 << 8);
-//		//Set R4 to high
-//		*pPortA_OutputData |= (1 << 11);
-//
-//		if(*pPortA_InputData & (1 << 0)){ //C1
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 1)){ //C2
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//		else if(*pPortA_InputData & (1 << 6)){ //C3
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//			}
-//		else if(*pPortA_InputData & (1 << 7)){ //C4
-//			*pPortA_OutputData |= (1 << 5); //Turn LED on
-//		}
-//
-//
-//
-//	}
 
+	while(1){
+		//Set Row data output to high (Output data register)
+		SetRows();
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_RESET);
+		//Set R1 to LOW
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO8, GPIO_PIN_RESET);
+
+		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+			}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+
+		//Set Row data output to high (Output data register)
+		SetRows();
+		//Set R1 to LOW
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO9, GPIO_PIN_RESET);
+		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+
+			//Set Row data output to high (Output data register)
+		SetRows();
+		//Set R1 to LOW
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO10, GPIO_PIN_RESET);
+
+		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+
+		//Set Row data output to high (Output data register)
+		SetRows();
+		//Set R1 to LOW
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO11, GPIO_PIN_RESET);
+
+		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+			delay();
+		}
+
+	}
+
+	return 0;
 }
