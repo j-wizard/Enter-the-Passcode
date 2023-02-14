@@ -8,6 +8,7 @@
 #ifndef INC_STM32F446RE_H_
 #define INC_STM32F446RE_H_
 
+
 #include <stdint.h>
 
 #define _vol volatile
@@ -35,6 +36,9 @@
 #define RESET 					DISABLE
 #define GPIO_PIN_SET			SET
 #define GPIO_PIN_RESET			RESET
+#define FLAG_SET				SET
+#define FLAG_RESET				RESET
+
 
 //Addresses of memories
 #define FLASH_BASE 0x08000000U //base address of flash memory
@@ -64,26 +68,37 @@
 
 
 //Addresses of APB1 Peripherals
+
+//SPI Peripherals
 #define SPI2_BASE  (APB1_BASE + 0x3800)
 #define SPI3_BASE  (APB1_BASE + 0x3C00)
 
+
+//UART/USART Peripherals
 #define USART2_BASE (APB1_BASE + 0x4400)
 #define USART3_BASE (APB1_BASE + 0x4800)
 
 #define UART4_BASE (APB1_BASE + 0x4C00)
 #define UART5_BASE (APB1_BASE + 0x5000)
 
+
+//I2C Peripherals
 #define I2C1_BASE  (APB1_BASE + 0x5400)
 #define I2C2_BASE  (APB1_BASE + 0x5800)
 #define I2C3_BASE  (APB1_BASE + 0x5C00)
 
 
 //Addresses of APB2 Peripherals
+
+//USART Peripherals
 #define USART1_BASE (APB2_BASE + 0x1000)
 #define USART6_BASE (APB2_BASE + 0x1400)
 
+
+//SPI Peripherals
 #define SPI1_BASE   (APB2_BASE + 0x3000)
 #define SPI4_BASE   (APB2_BASE + 0x3400)
+
 
 #define SYSCFG_BASE (APB2_BASE + 0x3800)
 
@@ -108,21 +123,37 @@ typedef struct{
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct{
-	_vol uint32_t CR;
-	_vol uint32_t CR2;
-	_vol uint32_t SR;
-	_vol uint32_t DR;
-	_vol uint32_t CRCPR;
-	_vol uint32_t RXCRCR;
-	_vol uint32_t TXCRCR;
-	_vol uint32_t I2SCFGR;
-	_vol uint32_t I2SPR;
+	_vol uint32_t CR;								//SPI Control Register 1														0x00
+	_vol uint32_t CR2;								//SPI Control Register 2														0x04
+	_vol uint32_t SR;								//SPI Status Register															0x08
+	_vol uint32_t DR;								//SPI Data Register																0x0c
+	_vol uint32_t CRCPR;							//SPI CRC Polynomial Register													0x10
+	_vol uint32_t RXCRCR;							//SPI RX CRC Register 															0x14
+	_vol uint32_t TXCRCR;							//SPI TX CRC Register															0x18
+	_vol uint32_t I2SCFGR;							//SPI I2S Config Register														0x1C
+	_vol uint32_t I2SPR;							//SPI I2S Prescaler Register													0x20
 
 }SPI_REG_t;
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+typedef struct{
+	_vol uint32_t CR1;								//I2C Control Register 1														0x00
+	_vol uint32_t CR2;								//I2C Control Register 2														0x04
+	_vol uint32_t OAR1;								//I2C OWN Address Register 1													0x08
+	_vol uint32_t OAR2;								//I2C OWN Address Register 2													0x0C
+	_vol uint32_t DR;								//I2C Data Register																0x10
+	_vol uint32_t SR1;								//I2C Status Register 1															0x14
+	_vol uint32_t SR2;								//I2C Status Register 2															0x18
+	_vol uint32_t CCR;								//I2C Clock Control Register													0x1C
+	_vol uint32_t TRISE;							//I2C TRISE Register															0x20
+	_vol uint32_t FLTR;								//I2C FLTR Register																0x24
 
-//Define struct variables for each GPIO
+}I2C_REG_t;
+
+
+
+//Define structures  for each GPIO
 #define GPIOA					((GPIO_REG_t*) GPIOA_BASE)
 #define GPIOB					((GPIO_REG_t*) GPIOB_BASE)
 #define GPIOC					((GPIO_REG_t*) GPIOC_BASE)
@@ -133,11 +164,17 @@ typedef struct{
 #define GPIOH					((GPIO_REG_t*) GPIOH_BASE)
 
 
-//Define struct variables for each SPI
+//Define structures for each SPI
 #define SPI1					((SPI_REG_t*) SPI1_BASE)
 #define SPI2					((SPI_REG_t*) SPI2_BASE)
 #define SPI3					((SPI_REG_t*) SPI3_BASE)
 #define SPI4					((SPI_REG_t*) SPI4_BASE)
+
+
+//Define structures for each I2C
+#define I2C1					((I2C_REG_t*) I2C1_BASE)
+#define I2C2					((I2C_REG_t*) I2C2_BASE)
+#define I2C3					((I2C_REG_t*) I2C2_BASE)
 
 #define GPIO_BASE_TO_CODE(x)  (	(x == GPIOA) ? 0 :\
 								(x == GPIOB) ? 1 :\
@@ -162,44 +199,44 @@ typedef struct{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Struct for RCC datatype
 typedef struct{
-	_vol uint32_t RCC_CR;
-	_vol uint32_t RCC_PLLCFGR;
-	_vol uint32_t RCC_CFGR;
-	_vol uint32_t RCC_CIR;
-	_vol uint32_t RCC_AHB1RSTR;
-	_vol uint32_t RCC_AHB2RSTR;
-	_vol uint32_t RCC_AHB3RSTR;
-	_vol uint32_t RESERVED1;
-	_vol uint32_t RCC_APBH1RSTR;
-	_vol uint32_t RCC_APB2RSTR;
-	_vol uint32_t RESERVED2;
-	_vol uint32_t RESERVED3;
-	_vol uint32_t RCC_AHB1ENR;
-	_vol uint32_t RCC_AHB2ENR;
-	_vol uint32_t RCC_AHB3ENR;
-	_vol uint32_t RESERVED4;
-	_vol uint32_t RCC_APB1ENR;
-	_vol uint32_t RCC_APB2ENR;
-	_vol uint32_t RESERVED5;
-	_vol uint32_t RESERVED6;
-	_vol uint32_t RCC_AHB1LPENR;
-	_vol uint32_t RCC_AHB2LPENR;
-	_vol uint32_t RCC_AHB3LPENR;
-	_vol uint32_t RESERVED7;
-	_vol uint32_t RCC_APB1LPENR;
-	_vol uint32_t RCC_APB2LPENR;
-	_vol uint32_t RESERVED8;
-	_vol uint32_t RESERVED9;
-	_vol uint32_t RCC_BDCR;
-	_vol uint32_t RCC_CSR;
-	_vol uint32_t RESERVED10;
-	_vol uint32_t RESERVED11;
-	_vol uint32_t RCC_SSCGR;
-	_vol uint32_t RCC_PLLI2SCFGR;
-	_vol uint32_t RCC_PLLSAICFGR;
-	_vol uint32_t RCC_DCKCFGR;
-	_vol uint32_t RCC_CKGATENR;
-	_vol uint32_t RCC_DCKCFGR2;
+	_vol uint32_t RCC_CR;							//RCC Clock Control Register													0x00
+	_vol uint32_t RCC_PLLCFGR;						//RCC PLL Configuration Register												0x04
+	_vol uint32_t RCC_CFGR;							//RCC Clock Config Register														0x08
+	_vol uint32_t RCC_CIR;							//RCC Clock Interrupt Register													0x0C
+	_vol uint32_t RCC_AHB1RSTR;						//RCC AHB1 Peripheral Reset Register											0x10
+	_vol uint32_t RCC_AHB2RSTR;						//RCC AHB2 Peripheral Reset Register											0x14
+	_vol uint32_t RCC_AHB3RSTR;						//RCC AHB3 Peripheral Reset Register											0x18
+	_vol uint32_t RESERVED1;						//																				0x1C
+	_vol uint32_t RCC_APB1RSTR;						//RCC APB1 Peripheral Reset Register											0X20
+	_vol uint32_t RCC_APB2RSTR;						//RCC APB2 Peripheral Reset Register											0X24
+	_vol uint32_t RESERVED2;						//																				0X28
+	_vol uint32_t RESERVED3;						//																				0X2C
+	_vol uint32_t RCC_AHB1ENR;						//RCC AHB1 Peripheral Clock Enable Register										0x30
+	_vol uint32_t RCC_AHB2ENR;						//RCC AHB2 Peripheral Clock Enable Register										0x34
+	_vol uint32_t RCC_AHB3ENR;						//RCC AHB3 Peripheral Clock Enable Register										0x38
+	_vol uint32_t RESERVED4;						//																				0x3C
+	_vol uint32_t RCC_APB1ENR;						//RCC APB1 Peripheral Clock Enable Register										0x40
+	_vol uint32_t RCC_APB2ENR;						//RCC APB2 Peripheral Clock Enable Register										0x44
+	_vol uint32_t RESERVED5;						//																				0x48
+	_vol uint32_t RESERVED6;						//																				0x4C
+	_vol uint32_t RCC_AHB1LPENR;					//RCC AHB1 Peripheral Low Power Enable Register									0x50
+	_vol uint32_t RCC_AHB2LPENR;					//RCC AHB2 Peripheral Low Power Enable Register									0x54
+	_vol uint32_t RCC_AHB3LPENR;					//RCC AHB3 Peripheral Low Power ENABLE Register									0x58
+	_vol uint32_t RESERVED7;						//																				0x5C
+	_vol uint32_t RCC_APB1LPENR;					//RCC APB1 Peripheral Low Power Enable Register									0x60
+	_vol uint32_t RCC_APB2LPENR;					//RCC APB2 Peripheral Low Power Enable Register									0x64
+	_vol uint32_t RESERVED8;						//																				0x68
+	_vol uint32_t RESERVED9;						//																				0x6C
+	_vol uint32_t RCC_BDCR;							//RCC Backup Domain Control Register											0x70
+	_vol uint32_t RCC_CSR;							//RCC Clock Control & Status Register											0x74
+	_vol uint32_t RESERVED10;						//																				0x78
+	_vol uint32_t RESERVED11;						//																				0x7C
+	_vol uint32_t RCC_SSCGR;						//RCC Spread Spectrum Clock Generation Register									0x80
+	_vol uint32_t RCC_PLLI2SCFGR;					//RCC PLLI2S Configuration Register												0x84
+	_vol uint32_t RCC_PLLSAICFGR;					//RCC PLL Configuration Register												0x88
+	_vol uint32_t RCC_DCKCFGR;						//RCC Dedicated Clock COnfiguration Register									0x8C
+	_vol uint32_t RCC_CKGATENR;						//RCC Clocks Gated ENable Register												0x90
+	_vol uint32_t RCC_DCKCFGR2;						//RCC Dedicated Clocks Configuration Register 2									0x94
 }RCC_REG_t;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -280,21 +317,6 @@ typedef struct{
 #define GPIOG_CLK_DIS()					(RCC->RCC_AHB1ENR &= ~(1 << 6))
 #define GPIOH_CLK_DIS()					(RCC->RCC_AHB1ENR &= ~(1 << 7))
 
-//RCC Reset for GPIO Ports
-#define GPIOA_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 0)); (RCC->RCC_AHB1RSTR |= ~(1 << 0));} while(0)
-#define GPIOB_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 1)); (RCC->RCC_AHB1RSTR |= ~(1 << 1));} while(0)
-#define GPIOC_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 2)); (RCC->RCC_AHB1RSTR |= ~(1 << 2));} while(0)
-#define GPIOD_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 3)); (RCC->RCC_AHB1RSTR |= ~(1 << 3));} while(0)
-#define GPIOE_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 4)); (RCC->RCC_AHB1RSTR |= ~(1 << 4));} while(0)
-#define GPIOF_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 5)); (RCC->RCC_AHB1RSTR |= ~(1 << 5));} while(0)
-#define GPIOG_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 6)); (RCC->RCC_AHB1RSTR |= ~(1 << 6));} while(0)
-#define GPIOH_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 7)); (RCC->RCC_AHB1RSTR |= ~(1 << 7));} while(0)
-
-#define SPI1_REG_RESET()				do{(RCC->RCC_AHB2RSTR |= (1 << 12)); (RCC->RCC_AHB2RSTR |= ~(1 << 12));} while(0)
-#define SPI2_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 14)); (RCC->RCC_AHB1RSTR |= ~(1 << 14));} while(0)
-#define SPI3_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 15)); (RCC->RCC_AHB1RSTR |= ~(1 << 15));} while(0)
-#define SPI4_REG_RESET()				do{(RCC->RCC_AHB2RSTR |= (1 << 13)); (RCC->RCC_AHB2RSTR |= ~(1 << 13));} while(0)
-
 
 //Clock disable macros for I2C peripherals
 #define I2C1_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 21))
@@ -317,12 +339,31 @@ typedef struct{
 #define USART5_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 20))
 #define USART6_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 5))
 
+//RCC Reset for GPIO Ports
+#define GPIOA_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 0)); (RCC->RCC_AHB1RSTR |= ~(1 << 0));} while(0)
+#define GPIOB_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 1)); (RCC->RCC_AHB1RSTR |= ~(1 << 1));} while(0)
+#define GPIOC_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 2)); (RCC->RCC_AHB1RSTR |= ~(1 << 2));} while(0)
+#define GPIOD_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 3)); (RCC->RCC_AHB1RSTR |= ~(1 << 3));} while(0)
+#define GPIOE_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 4)); (RCC->RCC_AHB1RSTR |= ~(1 << 4));} while(0)
+#define GPIOF_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 5)); (RCC->RCC_AHB1RSTR |= ~(1 << 5));} while(0)
+#define GPIOG_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 6)); (RCC->RCC_AHB1RSTR |= ~(1 << 6));} while(0)
+#define GPIOH_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 7)); (RCC->RCC_AHB1RSTR |= ~(1 << 7));} while(0)
+
+//RCC Reset for SPI Registers
+#define SPI1_REG_RESET()				do{(RCC->RCC_AHB2RSTR |= (1 << 12)); (RCC->RCC_AHB2RSTR |= ~(1 << 12));} while(0)
+#define SPI2_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 14)); (RCC->RCC_AHB1RSTR |= ~(1 << 14));} while(0)
+#define SPI3_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 15)); (RCC->RCC_AHB1RSTR |= ~(1 << 15));} while(0)
+#define SPI4_REG_RESET()				do{(RCC->RCC_AHB2RSTR |= (1 << 13)); (RCC->RCC_AHB2RSTR |= ~(1 << 13));} while(0)
+
+//RCC Reset for SPI Registers
+#define I2C1_REG_RESET()				do{(RCC->RCC_APB1RSTR |= (1 << 21)); (RCC->RCC_APB1RSTR |= ~(1 << 21));} while(0)
+#define I2C2_REG_RESET()				do{(RCC->RCC_APB1RSTR |= (1 << 22)); (RCC->RCC_APB1RSTR |= ~(1 << 22));} while(0)
+#define I2C3_REG_RESET()				do{(RCC->RCC_APB1RSTR |= (1 << 23)); (RCC->RCC_APB1RSTR |= ~(1 << 23));} while(0)
+
+
 
 //Clock disable macros for SYSCFG peripherals
 #define SYSCFG_CLK_DIS()					(RCC->RCC_APB2ENR &= ~(1 << 14))
-
-
-
 
 
 
