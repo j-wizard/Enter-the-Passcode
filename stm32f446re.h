@@ -34,8 +34,8 @@
 #define DISABLE 				0
 #define SET 					ENABLE
 #define RESET 					DISABLE
-#define GPIO_PIN_SET			SET
-#define GPIO_PIN_RESET			RESET
+#define GPIO_PIN_SET				SET
+#define GPIO_PIN_RESET				RESET
 #define FLAG_SET				SET
 #define FLAG_RESET				RESET
 
@@ -112,8 +112,8 @@ typedef struct{
 	_vol uint32_t OTYPER; 							//GPIO Output Type Register 													0x04
 	_vol uint32_t OSPEEDR; 							//GPIO Output Speed Register													0x08
 	_vol uint32_t PUPDR; 							//GPIO Pullup/Pulldown Register													0x0C
-	_vol uint32_t IDR; 								//GPIO Input Data Register														0x10
-	_vol uint32_t ODR; 								//GPIO Output Data Register														0x14
+	_vol uint32_t IDR; 							//GPIO Input Data Register														0x10
+	_vol uint32_t ODR; 							//GPIO Output Data Register														0x14
 	_vol uint32_t BSRR; 							// GPIO Bit Set/Bit Reset 														0x18
 	_vol uint32_t LCKR; 							//GPIO Lock Register															0x1C
 	_vol uint32_t AFRL; 							//GPIO Alternate Function Low Register											0x20
@@ -123,10 +123,10 @@ typedef struct{
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct{
-	_vol uint32_t CR;								//SPI Control Register 1														0x00
-	_vol uint32_t CR2;								//SPI Control Register 2														0x04
-	_vol uint32_t SR;								//SPI Status Register															0x08
-	_vol uint32_t DR;								//SPI Data Register																0x0c
+	_vol uint32_t CR;							//SPI Control Register 1														0x00
+	_vol uint32_t CR2;							//SPI Control Register 2														0x04
+	_vol uint32_t SR;							//SPI Status Register															0x08
+	_vol uint32_t DR;							//SPI Data Register																0x0c
 	_vol uint32_t CRCPR;							//SPI CRC Polynomial Register													0x10
 	_vol uint32_t RXCRCR;							//SPI RX CRC Register 															0x14
 	_vol uint32_t TXCRCR;							//SPI TX CRC Register															0x18
@@ -138,16 +138,16 @@ typedef struct{
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct{
-	_vol uint32_t CR1;								//I2C Control Register 1														0x00
-	_vol uint32_t CR2;								//I2C Control Register 2														0x04
-	_vol uint32_t OAR1;								//I2C OWN Address Register 1													0x08
-	_vol uint32_t OAR2;								//I2C OWN Address Register 2													0x0C
-	_vol uint32_t DR;								//I2C Data Register																0x10
-	_vol uint32_t SR1;								//I2C Status Register 1															0x14
-	_vol uint32_t SR2;								//I2C Status Register 2															0x18
-	_vol uint32_t CCR;								//I2C Clock Control Register													0x1C
+	_vol uint32_t CR1;							//I2C Control Register 1														0x00
+	_vol uint32_t CR2;							//I2C Control Register 2														0x04
+	_vol uint32_t OAR1;							//I2C OWN Address Register 1													0x08
+	_vol uint32_t OAR2;							//I2C OWN Address Register 2													0x0C
+	_vol uint32_t DR;							//I2C Data Register																0x10
+	_vol uint32_t SR1;							//I2C Status Register 1															0x14
+	_vol uint32_t SR2;							//I2C Status Register 2															0x18
+	_vol uint32_t CCR;							//I2C Clock Control Register													0x1C
 	_vol uint32_t TRISE;							//I2C TRISE Register															0x20
-	_vol uint32_t FLTR;								//I2C FLTR Register																0x24
+	_vol uint32_t FLTR;							//I2C FLTR Register																0x24
 
 }I2C_REG_t;
 
@@ -177,13 +177,13 @@ typedef struct{
 #define I2C3					((I2C_REG_t*) I2C2_BASE)
 
 #define GPIO_BASE_TO_CODE(x)  (	(x == GPIOA) ? 0 :\
-								(x == GPIOB) ? 1 :\
-								(x == GPIOC) ? 2 :\
-								(x == GPIOD) ? 3 :\
-								(x == GPIOE) ? 4 :\
-								(x == GPIOF) ? 5 :\
-								(x == GPIOG) ? 6 :\
-								(x == GPIOH) ? 7 :0	)
+				(x == GPIOB) ? 1 :\
+				(x == GPIOC) ? 2 :\
+				(x == GPIOD) ? 3 :\
+				(x == GPIOE) ? 4 :\
+				(x == GPIOF) ? 5 :\
+				(x == GPIOG) ? 6 :\
+				(x == GPIOH) ? 7 :0	)
 
 
 #define IRQ_NO_EXTI0			6
@@ -219,12 +219,12 @@ typedef struct{
 	_vol uint32_t RCC_APB2ENR;						//RCC APB2 Peripheral Clock Enable Register										0x44
 	_vol uint32_t RESERVED5;						//																				0x48
 	_vol uint32_t RESERVED6;						//																				0x4C
-	_vol uint32_t RCC_AHB1LPENR;					//RCC AHB1 Peripheral Low Power Enable Register									0x50
-	_vol uint32_t RCC_AHB2LPENR;					//RCC AHB2 Peripheral Low Power Enable Register									0x54
-	_vol uint32_t RCC_AHB3LPENR;					//RCC AHB3 Peripheral Low Power ENABLE Register									0x58
+	_vol uint32_t RCC_AHB1LPENR;						//RCC AHB1 Peripheral Low Power Enable Register									0x50
+	_vol uint32_t RCC_AHB2LPENR;						//RCC AHB2 Peripheral Low Power Enable Register									0x54
+	_vol uint32_t RCC_AHB3LPENR;						//RCC AHB3 Peripheral Low Power ENABLE Register									0x58
 	_vol uint32_t RESERVED7;						//																				0x5C
-	_vol uint32_t RCC_APB1LPENR;					//RCC APB1 Peripheral Low Power Enable Register									0x60
-	_vol uint32_t RCC_APB2LPENR;					//RCC APB2 Peripheral Low Power Enable Register									0x64
+	_vol uint32_t RCC_APB1LPENR;						//RCC APB1 Peripheral Low Power Enable Register									0x60
+	_vol uint32_t RCC_APB2LPENR;						//RCC APB2 Peripheral Low Power Enable Register									0x64
 	_vol uint32_t RESERVED8;						//																				0x68
 	_vol uint32_t RESERVED9;						//																				0x6C
 	_vol uint32_t RCC_BDCR;							//RCC Backup Domain Control Register											0x70
@@ -232,8 +232,8 @@ typedef struct{
 	_vol uint32_t RESERVED10;						//																				0x78
 	_vol uint32_t RESERVED11;						//																				0x7C
 	_vol uint32_t RCC_SSCGR;						//RCC Spread Spectrum Clock Generation Register									0x80
-	_vol uint32_t RCC_PLLI2SCFGR;					//RCC PLLI2S Configuration Register												0x84
-	_vol uint32_t RCC_PLLSAICFGR;					//RCC PLL Configuration Register												0x88
+	_vol uint32_t RCC_PLLI2SCFGR;						//RCC PLLI2S Configuration Register												0x84
+	_vol uint32_t RCC_PLLSAICFGR;						//RCC PLL Configuration Register												0x88
 	_vol uint32_t RCC_DCKCFGR;						//RCC Dedicated Clock COnfiguration Register									0x8C
 	_vol uint32_t RCC_CKGATENR;						//RCC Clocks Gated ENable Register												0x90
 	_vol uint32_t RCC_DCKCFGR2;						//RCC Dedicated Clocks Configuration Register 2									0x94
@@ -268,9 +268,9 @@ typedef struct{
 }SYSCFG_REG_t;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define RCC								((RCC_REG_t*)RCC_BASE)
-#define EXTI							((EXTI_REG_t*)EXTI_BASE)
-#define SYSCFG							((SYSCFG_REG_t*)SYSCFG_BASE)
+#define RCC						((RCC_REG_t*)RCC_BASE)
+#define EXTI						((EXTI_REG_t*)EXTI_BASE)
+#define SYSCFG						((SYSCFG_REG_t*)SYSCFG_BASE)
 
 //Clock enable macros for GPIOx peripherals
 #define GPIOA_CLK_EN()					(RCC->RCC_AHB1ENR |= (1 << 0))
@@ -332,12 +332,12 @@ typedef struct{
 
 
 //Clock disable macros for USART peripherals
-#define USART1_CLK_DIS()					(RCC->RCC_APB2ENR &= ~(1 << 4))
-#define USART2_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 17))
-#define USART3_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 18))
-#define USART4_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 19))
-#define USART5_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 20))
-#define USART6_CLK_DIS()					(RCC->RCC_APB1ENR &= ~(1 << 5))
+#define USART1_CLK_DIS()				(RCC->RCC_APB2ENR &= ~(1 << 4))
+#define USART2_CLK_DIS()				(RCC->RCC_APB1ENR &= ~(1 << 17))
+#define USART3_CLK_DIS()				(RCC->RCC_APB1ENR &= ~(1 << 18))
+#define USART4_CLK_DIS()				(RCC->RCC_APB1ENR &= ~(1 << 19))
+#define USART5_CLK_DIS()				(RCC->RCC_APB1ENR &= ~(1 << 20))
+#define USART6_CLK_DIS()				(RCC->RCC_APB1ENR &= ~(1 << 5))
 
 //RCC Reset for GPIO Ports
 #define GPIOA_REG_RESET()				do{(RCC->RCC_AHB1RSTR |= (1 << 0)); (RCC->RCC_AHB1RSTR |= ~(1 << 0));} while(0)
