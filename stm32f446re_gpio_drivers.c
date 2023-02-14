@@ -87,13 +87,13 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 
 	//Configure Alternate Function
 	if(pGPIOHandle->GPIO_PinConfig.PinMode == GPIO_MODE_ALTFUN){
-		temp = pGPIOHandle->GPIO_PinConfig.PinALTFunc << (4 * pGPIOHandle->GPIO_PinConfig.PinNumber);
-		if(pGPIOHandle->GPIO_PinConfig.PinALTFunc <=7){
-			pGPIOHandle->pGPIOx->AFRL &= ~(0xF << 4 * pGPIOHandle->GPIO_PinConfig.PinNumber);
+		temp = pGPIOHandle->GPIO_PinConfig.PinALTFunc << ((pGPIOHandle->GPIO_PinConfig.PinNumber % 8) * 4);
+		if(pGPIOHandle->GPIO_PinConfig.PinNumber <=7){
+			pGPIOHandle->pGPIOx->AFRL &= ~(0xF <<  (pGPIOHandle->GPIO_PinConfig.PinNumber % 8) * 4);
 			pGPIOHandle->pGPIOx->AFRL |= temp;
 		}
 		else{
-			pGPIOHandle->pGPIOx->AFRH &= ~(0xF << 4 * pGPIOHandle->GPIO_PinConfig.PinNumber);
+			pGPIOHandle->pGPIOx->AFRH &= ~(0xF << (pGPIOHandle->GPIO_PinConfig.PinNumber % 8) * 4);
 			pGPIOHandle->pGPIOx->AFRH |= temp;
 		}
 	}
@@ -186,36 +186,36 @@ void GPIO_PeriCLKCTRL(GPIO_REG_t* pGPIOx, uint8_t ENorDIS){
 //////////////////////////////////////////
 
 
-//GPIO READ/WRITE
+//Read GPIOx input pin
 bool GPIO_ReadInPin(GPIO_REG_t *pGPIOx, uint8_t PinNumber){
 	uint8_t value;
 	value = (uint8_t)(pGPIOx->IDR >> PinNumber) & 0x00000001;
 	return value;
 }
 
-
+//Read entire GPIOx Port
 uint16_t GPIO_ReadInPort(GPIO_REG_t *pGPIOx){
 	uint16_t value;
 	value = (uint16_t)pGPIOx->IDR;
 	return value;
 }
 
-
+//Write to GPIOx pin
 void GPIO_WriteOutPin(GPIO_REG_t *pGPIOx, uint8_t PinNumber, uint8_t value){
 	if(value == GPIO_PIN_SET){
 		pGPIOx->ODR |= (1 << PinNumber);
 	}
 	else{
-		pGPIOx->ODR |= ~(1 << PinNumber);
+		pGPIOx->ODR &= ~(1 << PinNumber);
 	}
 }
 
-
+//Write to entire GPIOx port
 void GPIO_WriteOutPort(GPIO_REG_t *pGPIOx, uint16_t value){
 	pGPIOx->ODR = value;
 }
 
-
+//Toggle GPIOx pin on/off
 void GPIO_TogglePin(GPIO_REG_t *pGPIOx, uint8_t PinNumber){
 	pGPIOx->ODR ^= (1 << PinNumber);
 }
