@@ -22,7 +22,7 @@ typedef struct{
 }GPIO_PinConfig_t;
 ////////////////////////////////////////////
 
-//
+//Structure for GPIO Handling
 typedef struct{
 	GPIO_REG_t *pGPIOx;
 	GPIO_PinConfig_t GPIO_PinConfig;
@@ -74,7 +74,7 @@ typedef struct{
 //////////////////////////////////////////
 
 //PIN PULLUP/PULLDOWN CONFIGURATION
-#define GPIO_NO_PUPD		0
+#define GPIO_NO_PUPD			0
 #define GPIO_PU				1
 #define GPIO_PD				2
 ///////////////////////////////////////////
