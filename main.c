@@ -16,17 +16,6 @@
  ******************************************************************************
  */
 
-/* ******************************************************************************
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *******************************************************************************/
 
 #include <stdint.h>
 
@@ -48,6 +37,28 @@ void SetRows(){
 void delay(){
 	for(int i=0;i<300000;i++);
 }
+
+void CheckRow(GPIO_REG_t *pGPIOx, int Row){
+	GPIO_WriteOutPin(pGPIOx, Row, GPIO_PIN_RESET);
+
+	if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+	}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+	}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+		}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+	}
+}
+
 
 int main(void)
 {
@@ -109,90 +120,18 @@ int main(void)
 		//Set Row data output to high (Output data register)
 		SetRows();
 		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_RESET);
+
 		//Set R1 to LOW
-		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO8, GPIO_PIN_RESET);
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO8);
 
-		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-			}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
+		//Set R2 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO9);
 
-		//Set Row data output to high (Output data register)
-		SetRows();
-		//Set R1 to LOW
-		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO9, GPIO_PIN_RESET);
-		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
+		//Set R3 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO10);
 
-			//Set Row data output to high (Output data register)
-		SetRows();
-		//Set R1 to LOW
-		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO10, GPIO_PIN_RESET);
-
-		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-
-		//Set Row data output to high (Output data register)
-		SetRows();
-		//Set R1 to LOW
-		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO11, GPIO_PIN_RESET);
-
-		if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO0) == 0){ //C1
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO1) == 0){ //C2
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO6) == 0){ //C3
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
-		else if(GPIO_ReadInPin(gpiox.pGPIOx, GPIO_PIN_NO7) == 0){ //C4
-			GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
-			delay();
-		}
+		//Set R4 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO11);
 
 	}
 
