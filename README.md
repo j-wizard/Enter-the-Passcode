@@ -1,5 +1,4 @@
 # Enter-the-Passcode
-Status: Complete
 
 How it works:
  - LCD screen prompts user to enter a passcode
