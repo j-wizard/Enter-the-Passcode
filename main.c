@@ -16,133 +16,195 @@
  ******************************************************************************
  */
 
-#include <stdint.h>
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
+#include <stdio.h>
+#include "lcd.h"
+#include "stm32f446re.h"
+#include "stm32f446re_gpio_drivers.h"
+
+//Row 1 Characters
+char row_1_keys[4] = {'1','2','3','A'};
+
+//Row 2 Characters
+char row_2_keys[4] = {'4','5','6','B'};
+
+//Row 3 Characters
+char row_3_keys[4] = {'7','8','9','C'};
+
+//Row 4 Characters
+char row_4_keys[4] = {'*','0','#','D'};
+
+char passcode[4] = {'1','2','3','4'};
+
+//Stores user input
+char user_entry[4];
+
+//Keep track of how many characters user has pressed
+int count = 0;
+
+//Set all rows to HIGH
+void SetRows(){
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO8, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO9, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO10, GPIO_PIN_SET);
+	GPIO_WriteOutPin(GPIOA, GPIO_PIN_NO11, GPIO_PIN_SET);
+}
+
+void delay(){
+	for(int i=0;i<300000;i++);
+}
+
+void CheckRow(GPIO_REG_t *pGPIOx, int RowPin, char row_keys[]){
+	GPIO_WriteOutPin(pGPIOx, RowPin, GPIO_PIN_RESET);
+
+	if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO0) == 0){ //C1
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+		user_entry[count] = row_keys[0];
+		lcd_print_char(user_entry[count]);
+		count++;
+
+	}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO1) == 0){ //C2
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+		user_entry[count] = row_keys[1];
+		lcd_print_char(user_entry[count]);
+		count++;
+	}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO6) == 0){ //C3
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+		user_entry[count] = row_keys[2];
+		lcd_print_char(user_entry[count]);
+		count++;
+	}
+	else if(GPIO_ReadInPin(pGPIOx, GPIO_PIN_NO7) == 0){ //C4
+		GPIO_WriteOutPin(pGPIOx, GPIO_PIN_NO5, GPIO_PIN_SET); //Turn LED on
+		delay();
+		user_entry[count] = row_keys[3];
+		lcd_print_char(user_entry[count]);
+		count++;
+	}
+	SetRows();
+}
+
+uint8_t Check_user_entry(char user_attempt[], char pass[]){
+	for(int i=0;i<4;i++){
+		if(user_attempt[i] != pass[i]){
+			lcd_display_clear();
+			lcd_set_cursor(1, 1);
+			lcd_print_string("LOGIN FAILED");
+
+			mdelay(3000);
+
+			lcd_display_clear();
+			lcd_set_cursor(1, 1);
+			lcd_print_string("Enter Passcode:");
+			lcd_set_cursor(2, 1);
+			count = 0;
+			return 0;
+		}
+	}
+
+	lcd_display_clear();
+	lcd_set_cursor(1, 1);
+	lcd_print_string("LOGIN SUCCESSFUL");
+
+	mdelay(3000);
+
+	lcd_display_clear();
+	lcd_set_cursor(1, 1);
+	lcd_print_string("Enter Passcode:");
+	lcd_set_cursor(2, 1);
+	count = 0;
+	return 1;
+
+}
 
 
-long int temp;
 int main(void)
 {
+	lcd_init();
 
-	//Registers needed:
-	//	RCC Clock Enable register
-	uint32_t* pPortA_Clock_Enable = (uint32_t*)0x40023830;
+	lcd_print_string("Enter Passcode:");
+	lcd_set_cursor(2, 1);
 
-	//	Port D OutputData Register
-	uint32_t* pPortA_OutputData = (uint32_t*) 0x40020014;
+	GPIO_Handle_t gpiox;
+	gpiox.pGPIOx = GPIOA; //GPIO port for rows and columns
 
-	// 	Port D InPutData Register
-	uint32_t* pPortA_InputData = (uint32_t*) 0x40020010;
+	//Initialization for Output pins (ROWs)
+	gpiox.GPIO_PinConfig.PinMode = GPIO_MODE_OUTPUT;
+	gpiox.GPIO_PinConfig.PinSpeed = GPIO_FAST_SPD;
+	gpiox.GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_PP;
+	gpiox.GPIO_PinConfig.PinPUPDCtrl = GPIO_NO_PUPD;
 
-	//	Port D Mode Register
-	uint32_t* pPortA_Mode = (uint32_t*) 0x40020000;
+	//Initialize row pins (PA8, PA9, PA10,PA11)
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO8;
+	GPIO_Init(&gpiox);
 
-	//	Pull-Down Register
-	uint32_t* pPortA_PullDown = (uint32_t*) 0x4002000C;
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO9;
+	GPIO_Init(&gpiox);
 
-	//Enable clock
-	*pPortA_Clock_Enable |= 0x01;
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO10;
+	GPIO_Init(&gpiox);
 
-	//Set Column pins to be input (PA0, PA1, PA6, PA7)
-	*pPortA_Mode &= ~(0xF << 0); //PA0, PA1
-	*pPortA_Mode &= ~(0xF << 12); //PA6, PA7
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO11;
+	GPIO_Init(&gpiox);
 
+	//Initialization for input pins (COLUMNS)
+	gpiox.GPIO_PinConfig.PinMode = GPIO_MODE_INPUT;
+	gpiox.GPIO_PinConfig.PinSpeed = GPIO_FAST_SPD;
+	gpiox.GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_OD;
+	gpiox.GPIO_PinConfig.PinPUPDCtrl = GPIO_PU;
 
-	//Set Row pins to be output (PA8, PA9, PA10, PA11)
-	*pPortA_Mode |= (0x55 << 16);
+	//Initialize column pins (PA0, PA1, PA6, PA7)
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO0;
+	GPIO_Init(&gpiox);
 
-	//Set PA5 (Onboard LED) to be output for testing
-	*pPortA_Mode |= (0x1 << 10);
-	//Clear bit 5
-	*pPortA_OutputData &= ~(1 << 5);
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO1;
+	GPIO_Init(&gpiox);
 
-	//Set pulldown register for Column Pins
-	*pPortA_PullDown |= 0xA;
-	*pPortA_PullDown |= (0xA << 12);
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO6;
+	GPIO_Init(&gpiox);
 
-	//Set Row data output to LOW (Output data register)
-	*pPortA_OutputData &= (0x0 << 8);
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO7;
+	GPIO_Init(&gpiox);
+
+	//Configure GPIO PA5 (onboard LED) for testing
+	gpiox.GPIO_PinConfig.PinMode = GPIO_MODE_OUTPUT;
+	gpiox.GPIO_PinConfig.PinSpeed = GPIO_FAST_SPD;
+	gpiox.GPIO_PinConfig.PinOPType = GPIO_OP_TYPE_PP;
+	gpiox.GPIO_PinConfig.PinPUPDCtrl = GPIO_NO_PUPD;
+	gpiox.GPIO_PinConfig.PinNumber = GPIO_PIN_NO5;
+
+	GPIO_Init(&gpiox);
+
 
 
 
 	while(1){
-		//Set Row data output to LOW (Output data register)
-		*pPortA_OutputData &= (0x0 << 8);
-		//Set R1 to high
-		*pPortA_OutputData |= (1 << 8);
+		//Set Row data output to high (Output data register)
+		SetRows();
+		GPIO_WriteOutPin(gpiox.pGPIOx, GPIO_PIN_NO5, GPIO_PIN_RESET);
 
-		if(*pPortA_InputData & (1 << 0)){ //C1
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 1)){ //C2
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 6)){ //C3
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-			}
-		else if(*pPortA_InputData & (1 << 7)){ //C4
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
+		//Set R1 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO8,row_1_keys);
 
-		//Set Row data output to LOW (Output data register)
-		*pPortA_OutputData &= (0x0 << 8);
-		//Set R2 to high
-		*pPortA_OutputData |= (1 << 9);
+		//Set R2 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO9,row_2_keys);
 
-		if(*pPortA_InputData & (1 << 0)){ //C1
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 1)){ //C2
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 6)){ //C3
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-			}
-		else if(*pPortA_InputData & (1 << 7)){ //C4
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
+		//Set R3 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO10,row_3_keys);
 
-		//Set Row data output to LOW (Output data register)
-		*pPortA_OutputData &= (0x0 << 8);
-		//Set R3 to high
-		*pPortA_OutputData |= (1 << 10);
+		//Set R4 to LOW
+		CheckRow(gpiox.pGPIOx, GPIO_PIN_NO11,row_4_keys);
 
-		if(*pPortA_InputData & (1 << 0)){ //C1
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
+		if(count > 3){
+			Check_user_entry(user_entry, passcode);
 		}
-		else if(*pPortA_InputData & (1 << 1)){ //C2
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 6)){ //C3
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-			}
-		else if(*pPortA_InputData & (1 << 7)){ //C4
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-
-		//Set Row data output to LOW (Output data register)
-		*pPortA_OutputData &= (0x0 << 8);
-		//Set R4 to high
-		*pPortA_OutputData |= (1 << 11);
-
-		if(*pPortA_InputData & (1 << 0)){ //C1
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 1)){ //C2
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-		else if(*pPortA_InputData & (1 << 6)){ //C3
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-			}
-		else if(*pPortA_InputData & (1 << 7)){ //C4
-			*pPortA_OutputData |= (1 << 5); //Turn LED on
-		}
-
-
 
 	}
 
+	return 0;
 }

@@ -1,12 +1,7 @@
 # Enter-the-Passcode
 Status: In progress
-
-Description:
-This project involves typing a passcode on a 4x4 keypad matrix.
-
-Features: 
-  1) User types a 4 digit passcode
-  2) LED turns green for correct, red for incorrect
-  3) LCD screen displays passcode as user types
+  Primary purpose of main.c file is to test keypad button input 
+  and verify that button presses are detected by turning on the 
+  onboard LED upon key press
   
  
